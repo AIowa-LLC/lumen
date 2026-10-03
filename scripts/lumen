@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# The system Python sees Arch's python-gobject and GStreamer packages even when
+# the caller happens to have a project virtual environment activated.
+LUMEN_SCRIPT="$(readlink -f -- "${BASH_SOURCE[0]}")"
+LUMEN_ROOT="$(dirname -- "$(dirname -- "$LUMEN_SCRIPT")")"
+export PYTHONPATH="$LUMEN_ROOT${PYTHONPATH:+:$PYTHONPATH}"
+exec /usr/bin/python -P -m lumen "$@"

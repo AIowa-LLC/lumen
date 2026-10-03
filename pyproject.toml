@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lumen-recorder"
+version = "0.5.0"
+description = "A native Wayland screen recorder and presentation editor for Omarchy"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [{name = "Lumen contributors"}]
+dependencies = []
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: X11 Applications :: GTK",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3",
+  "Topic :: Multimedia :: Video :: Capture",
+]
+
+[project.scripts]
+lumen = "lumen.__main__:main"
+
+[tool.setuptools]
+packages = ["lumen"]
+include-package-data = true
+
+[tool.setuptools.package-data]
+lumen = ["*.css"]

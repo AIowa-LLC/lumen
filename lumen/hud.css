@@ -1,0 +1,33 @@
+window.lumen-hud {
+  background: linear-gradient(115deg, #211b2f, #17151f);
+  color: #f1edf9;
+  border: 1px solid #554365;
+  border-radius: 17px;
+}
+.lumen-hud .hud-brand { font-size: 20px; font-weight: 800; letter-spacing: -0.8px; color: #ddceff; }
+.lumen-hud .hud-dot { font-size: 9px; color: #9c86c0; }
+.lumen-hud .hud-status { font-size: 11px; color: #b7a9c9; }
+.lumen-hud .hud-time { font-family: monospace; font-size: 12px; font-weight: 650; color: #c9badb; }
+.lumen-hud.hud-live .hud-dot { color: #f598ac; }
+.lumen-hud.hud-live .hud-time { color: #ffc2cf; }
+.lumen-hud.hud-paused .hud-dot, .lumen-hud.hud-paused .hud-time { color: #ebce91; }
+.lumen-hud button { min-height: 24px; padding: 5px 9px; border-radius: 9px; box-shadow: none; }
+.lumen-hud .hud-studio { background: #3b2e50; color: #e7dcfa; border: 1px solid #58426f; font-size: 11px; }
+.lumen-hud button.hud-icon, .lumen-hud .hud-icon > button { min-width: 22px; min-height: 24px; padding: 4px; background: transparent; color: #b9accb; }
+.lumen-hud .hud-source { font-size: 13px; font-weight: 650; color: #ece5f7; }
+.lumen-hud .hud-audio { font-size: 11px; color: #ab9cbd; }
+.lumen-hud .hud-detail { font-size: 10px; color: #9483a7; }
+.lumen-hud button.hud-primary { background: #c3a8ff; color: #241833; font-size: 13px; font-weight: 750; border: 1px solid #d3bfff; padding: 9px 12px; }
+.lumen-hud button.hud-primary.hud-stop { background: #ef94a7; border-color: #ffb2c1; color: #331723; }
+.lumen-hud button.hud-secondary { background: #30273f; color: #d8c5ee; border: 1px solid #4a3a5e; min-width: 22px; min-height: 24px; padding: 9px; }
+.lumen-hud button.hud-device { background: #292233; color: #bcaecc; border: 1px solid #453651; font-size: 11px; padding: 5px 8px; min-height: 20px; }
+.lumen-hud button.hud-device.hud-device-on { background: #392b4e; color: #e5d1ff; border-color: #81629e; }
+.lumen-hud button.hud-device.hud-device-busy { opacity: 0.75; }
+.lumen-hud .hud-device spinner { min-width: 12px; min-height: 12px; }
+.lumen-hud button:disabled { opacity: 0.42; }
+.lumen-hud .hud-settings > contents { background: #201a2b; border: 1px solid #554266; border-radius: 14px; }
+.lumen-hud .hud-settings-title { color: #c9b4e9; font-size: 10px; font-weight: 750; letter-spacing: 1px; }
+.lumen-hud .hud-setting-label { color: #ac9abd; font-size: 11px; }
+.lumen-hud .hud-settings dropdown { background: #2a2236; border-color: #493853; }
+.lumen-hud .hud-settings dropdown button { padding: 5px 8px; min-height: 22px; }
+.lumen-hud .hud-settings checkbutton { font-size: 11px; color: #d8c9e9; }

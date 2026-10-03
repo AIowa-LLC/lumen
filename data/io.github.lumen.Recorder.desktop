@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=Lumen
+GenericName=Screen Recorder
+Comment=Record your Wayland desktop and compose polished videos
+Exec=lumen
+Icon=io.github.lumen.Recorder
+Terminal=false
+Categories=AudioVideo;Recorder;
+Keywords=screen;record;video;wayland;hyprland;
+StartupNotify=true
+StartupWMClass=io.github.lumen.Recorder

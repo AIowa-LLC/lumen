@@ -1,0 +1,38 @@
+window { background: #111218; color: #eeeef4; }
+headerbar { background: #111218; border-bottom: 1px solid #292a35; box-shadow: none; }
+.sidebar { background: #15161e; border-right: 1px solid #292a35; padding: 24px 16px; }
+.brand { font-size: 28px; font-weight: 800; letter-spacing: -1px; }
+.eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 2px; color: #a3a3b8; }
+.page-title { font-size: 30px; font-weight: 750; letter-spacing: -1px; }
+.subtitle { color: #9697ae; font-size: 13px; }
+.muted { color: #9697ae; }
+.small { font-size: 11px; }
+.accent { color: #b7a3ff; }
+.good { color: #9adcc4; }
+.card { background: #1b1c26; border: 1px solid #30313e; border-radius: 16px; padding: 20px; }
+.preview { background: #08090e; border: 1px solid #353647; border-radius: 16px; }
+.preview-frame { padding: 30px; background: linear-gradient(135deg, #101725, #344b60); border-radius: 14px; }
+.preview-violet { background: linear-gradient(135deg, #27203e, #8063a6); }
+.preview-sand { background: linear-gradient(135deg, #d3bba0, #f2e7d5); }
+.preview-none { padding: 0; background: #08090e; }
+.section-title { font-size: 15px; font-weight: 700; }
+button { border-radius: 9px; padding: 9px 14px; box-shadow: none; }
+button.suggested-action { background: #bba5ff; color: #211a35; font-weight: 750; }
+button.record { background: #bba5ff; color: #211a35; padding: 16px; font-weight: 750; }
+button.destructive-action { background: #eb778d; color: #28121a; font-weight: 700; }
+button.nav { background: transparent; border: none; padding: 12px 14px; color: #a3a4bb; }
+button.nav.active { background: #30283f; color: #dacdff; }
+button.flat { background: transparent; }
+button:hover { filter: brightness(1.1); }
+dropdown, spinbutton, entry { background: #242531; border: 1px solid #383949; border-radius: 8px; }
+dropdown button { padding: 7px 10px; }
+spinbutton { min-height: 34px; }
+.timer { font-family: monospace; font-size: 17px; color: #eb91a5; }
+.badge { background: #25352f; color: #a2dfc7; border-radius: 6px; padding: 5px 9px; font-size: 10px; font-weight: 700; }
+.key { font-family: monospace; color: #8b8ca5; font-size: 10px; }
+.error { color: #f4a1b4; }
+.library-row { background: #1b1c26; border: 1px solid #30313e; border-radius: 14px; padding: 12px; }
+.library-row:hover { background: #252332; }
+progressbar progress { background: #bba5ff; }
+textview, textview text { background: #171821; color: #bcbdd2; font-family: monospace; font-size: 12px; }
+separator { background: #30313e; }
