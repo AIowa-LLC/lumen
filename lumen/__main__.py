@@ -23,9 +23,9 @@ def main() -> int:
             print(f"MCP support requires the optional SDK: run scripts/setup-mcp.py, or install lumen-recorder[mcp]. ({exc})", file=sys.stderr)
             return 1
         return serve(sys.argv[2:])
-    if sys.argv[1:2] == ["--agent"]:
-        if len(sys.argv) != 3:
-            print("--agent requires one JSON request", file=sys.stderr)
+    if sys.argv[1:2] in (["--agent"], ["--agent-host"]):
+        if len(sys.argv) != (3 if sys.argv[1] == "--agent" else 2):
+            print("Invalid internal agent command", file=sys.stderr)
             return 2
         from .ui import LumenApplication
 

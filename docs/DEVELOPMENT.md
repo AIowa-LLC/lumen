@@ -59,6 +59,7 @@ Inspect a script before running it. Run desktop checks only inside the target Hy
 | `scripts/verify_click_zoom.py` | Uses synthetic footage to check click-driven zoom, saved controls, preview, and export |
 | `scripts/verify_wallpapers.py` | Uses synthetic footage and an image fixture to check gallery selection/import, persistence, preview, and export |
 | `scripts/verify_mcp.py` | Uses the official MCP client, synthetic media, and an owned test window to check recording/replay, editing, export, cancellation, and reconnecting |
+| `scripts/verify_mcp_startup.py` | Checks MCP startup with Lumen closed and native app survival after disconnect; no capture |
 
 The scripts keep test artifacts in private temporary directories. `verify_layers.py` accepts `--speech-fixture /path/to/test-speech.wav` for an explicitly chosen local speech fixture; it does not download one automatically. Wallpaper import verification supplies its fixture to the chooser callback, so the real system file-dialog interaction still needs manual QA.
 

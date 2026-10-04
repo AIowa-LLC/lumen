@@ -2,12 +2,14 @@
 
 import importlib.util
 import json
+import os
 import unittest
+from unittest.mock import AsyncMock, Mock, patch
 
 SDK = importlib.util.find_spec("mcp") is not None
 if SDK:
     from mcp import Client
-    from lumen.mcp_server import create_server
+    from lumen.mcp_server import NativeBridge, create_server
 
 
 class Bridge:
@@ -72,3 +74,25 @@ class MCPTests(unittest.IsolatedAsyncioTestCase):
             self.assertIn("Show a product", text)
             self.assertIn("poll", text)
             self.assertIn("Follow the user's capture boundaries", text)
+
+    async def test_native_rpc_starts_host_then_uses_one_explicit_json_command(self):
+        bridge = NativeBridge()
+        bridge.ensure_app = AsyncMock()
+        process = Mock(returncode=0, communicate=AsyncMock(return_value=(b'{"result":{"state":"idle"}}', b"")))
+        with patch.dict(os.environ, {"LUMEN_LIBRARY": "/tmp/lumen-mcp-rpc-test"}), patch("lumen.mcp_server.asyncio.create_subprocess_exec", AsyncMock(return_value=process)) as spawn:
+            result = await bridge.call("status")
+        self.assertEqual(result, {"state": "idle"})
+        bridge.ensure_app.assert_awaited_once()
+        args = spawn.call_args.args
+        self.assertEqual(args[:5], ("/usr/bin/python", "-P", "-m", "lumen", "--agent"))
+        self.assertEqual(json.loads(args[5]), {"operation": "status", "arguments": {}, "library": "/tmp/lumen-mcp-rpc-test"})
+
+    async def test_native_rpc_timeout_reaps_its_command_and_reports_desktop_error(self):
+        bridge = NativeBridge()
+        bridge.ensure_app = AsyncMock()
+        process = Mock(returncode=None, communicate=AsyncMock(side_effect=TimeoutError), wait=AsyncMock())
+        with patch("lumen.mcp_server.asyncio.create_subprocess_exec", AsyncMock(return_value=process)):
+            with self.assertRaisesRegex(ValueError, "native Lumen app"):
+                await bridge.call("status")
+        process.kill.assert_called_once()
+        process.wait.assert_awaited_once()

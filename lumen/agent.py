@@ -12,6 +12,7 @@ from datetime import datetime, timezone
 import inspect
 import json
 import math
+import os
 from pathlib import Path
 import shutil
 import threading
@@ -163,7 +164,7 @@ class AgentController:
     def status(self):
         s = self.studio
         opening = getattr(s, "opening_project", None)
-        return {"version": __version__, "library": str(library_root()), "view": s.get_application().view,
+        return {"version": __version__, "pid": os.getpid(), "library": str(library_root()), "view": s.get_application().view,
                 "opening_project_id": Path(opening).name if isinstance(opening, str) else None,
                 "devices_ready": s.devices_ready, "capture_busy": s.capture_busy,
                 "recording": {"active": s.recorder.is_running, "state": s.recorder.status,

@@ -27,6 +27,8 @@ Python. It does not download Python. If neither is available, provide a Python
 The installer copies the configured runtime into the installed app. Alternatively,
 install `lumen-recorder[mcp]` in your own virtual environment. GTK and capture still
 use the system interpreter and the dependencies listed in the README.
+After updating, quit an existing idle Lumen instance and reopen it to load the new
+application code.
 
 Add this entry to your client's MCP configuration, replacing the command with
 your actual absolute launcher path:
@@ -135,3 +137,6 @@ footage and an owned test window. It verifies stdio discovery, recording,
 pause/resume, replay, custom wallpapers, captions/annotations, images, preview,
 export, cancellation, source preservation, and reconnection with a legacy client.
 It uses no physical microphone/camera, desktop audio, or pointer telemetry.
+Run `.mcp/venv/bin/python scripts/verify_mcp_startup.py` to check startup with Lumen
+closed and confirm that client disconnection leaves the isolated native app alive.
+This check starts no capture and closes only its own test instance.

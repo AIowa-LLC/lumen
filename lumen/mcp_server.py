@@ -7,6 +7,8 @@ import asyncio
 import json
 import os
 from pathlib import Path
+import subprocess
+import tempfile
 from typing import Annotated, Any, Literal
 
 from mcp.server import MCPServer
@@ -67,6 +69,43 @@ class EditPatch(BaseModel):
 
 
 class NativeBridge:
+    def __init__(self):
+        self.start_lock = asyncio.Lock()
+        self.native_host = None
+
+    async def ensure_app(self, env):
+        """Start/confirm the GTK primary without tying its life to an RPC pipe."""
+        async with self.start_lock:
+            with tempfile.TemporaryFile() as ready:
+                process = subprocess.Popen(
+                    ["/usr/bin/python", "-P", "-m", "lumen", "--agent-host"],
+                    stdin=subprocess.DEVNULL, stdout=ready, stderr=subprocess.DEVNULL,
+                    env=env, start_new_session=True,
+                )
+                deadline = asyncio.get_running_loop().time() + 20
+                while True:
+                    ready.seek(0)
+                    line = ready.readline()
+                    if line.endswith(b"\n"):
+                        response = json.loads(line)
+                        if response.get("primary"):
+                            self.native_host = process
+                        else:
+                            while process.poll() is None:
+                                if asyncio.get_running_loop().time() > deadline:
+                                    process.kill()
+                                    process.wait()
+                                    raise ValueError("Lumen's native launch did not finish.")
+                                await asyncio.sleep(.02)
+                        return
+                    if process.poll() is not None:
+                        raise ValueError("Cannot start Lumen. Check the desktop session/GTK dependencies; after an update, close and reopen an idle Lumen instance.")
+                    if asyncio.get_running_loop().time() > deadline:
+                        process.kill()
+                        process.wait()
+                        raise ValueError("Lumen's native launch timed out.")
+                    await asyncio.sleep(.02)
+
     async def call(self, operation, **arguments):
         payload = json.dumps({"operation": operation, "arguments": arguments, "library": str(library_root())}, allow_nan=False)
         if len(payload.encode()) > MAX_REQUEST_BYTES:
@@ -75,6 +114,7 @@ class NativeBridge:
         source = str(Path(__file__).resolve().parents[1])
         env["PYTHONPATH"] = source + (os.pathsep + env["PYTHONPATH"] if env.get("PYTHONPATH") else "")
         try:
+            await self.ensure_app(env)
             process = await asyncio.create_subprocess_exec(
                 "/usr/bin/python", "-P", "-m", "lumen", "--agent", payload,
                 stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE, env=env,

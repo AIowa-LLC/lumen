@@ -281,6 +281,10 @@ class LumenApplication(Adw.Application):
 
     def do_command_line(self, command):
         args = command.get_arguments()[1:]
+        if args == ["--agent-host"]:
+            self.ensure_windows()
+            command.print_literal(json.dumps({"primary": not command.get_is_remote()}) + "\n")
+            return 0
         if args and args[0] == "--agent":
             try:
                 if len(args) != 2:
