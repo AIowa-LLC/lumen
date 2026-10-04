@@ -4,6 +4,7 @@ Lumen targets Omarchy's Hyprland/Wayland desktop. Read the [README](../README.md
 
 ## Start with a focused change
 
+- Work on a feature branch and submit a pull request; `main` requires passing CI. See [repository protection](REPOSITORY.md).
 - Check [open issues](https://github.com/AIowa-LLC/lumen/issues) and [pull requests](https://github.com/AIowa-LLC/lumen/pulls) for related work.
 - Keep documentation-only changes separate from application behavior changes.
 - Describe the problem, the expected behavior, and the checks you actually ran. A focused test result is not a full hardware validation.
