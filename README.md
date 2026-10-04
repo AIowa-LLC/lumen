@@ -30,6 +30,7 @@ Lumen is an **Omarchy-exclusive project**. Its capture discovery, floating contr
 - **Focus on the action.** Use fixed or animated zoom, cursor-based suggestions, or click-driven zoom with adjustable hold and transition timing.
 - **Add context.** Author captions, text labels, arrows, boxes, highlights, and click rings. Import/export SRT or WebVTT, or generate captions with an optional local speech runtime.
 - **Export locally.** Render an edited preview, export H.264 MP4 or looping GIF, and preserve the original recording alongside the saved edit recipe.
+- **Let an agent run the workflow.** Connect a stdio MCP client to record, inspect frames, edit wallpapers and layers, and export through the same native app. See [MCP setup](docs/MCP.md).
 
 These features are implemented in the current source. Hardware support and workflow limits are covered below and in the [user guide](docs/USAGE.md).
 
@@ -52,7 +53,7 @@ Use **Python 3.11 or newer inside a running Omarchy/Hyprland Wayland session**, 
 | Optional live webcam bubble | `mpv` with V4L2 input support |
 | Optional automatic captions | Local faster-whisper runtime/model or whisper.cpp CLI/model |
 
-The development desktop's `ffmpeg-obs` package also provides `ffmpeg` and `ffprobe`. Lumen has no PyPI runtime dependencies; installing its Python package alone does not supply GTK, GStreamer, or the capture tools. The launcher and local installer do not install system dependencies.
+The development desktop's `ffmpeg-obs` package also provides `ffmpeg` and `ffprobe`. The GTK app has no PyPI runtime dependencies; optional MCP support uses the official Python SDK. Installing Lumen's Python package alone does not supply GTK, GStreamer, or the capture tools. The launcher and local installer do not install system dependencies.
 
 ### Run from source
 

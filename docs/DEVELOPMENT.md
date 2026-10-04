@@ -25,6 +25,7 @@ For bug reports, include reproduction steps, GPU/driver and relevant display sca
 | Preview and export | `lumen/editor.py`, `overlays.py`, `click_zoom.py` |
 | Timed layers and speech | `lumen/captions.py`, `layer_ui.py`, `speech.py`, `speech_worker.py`, `clicks.py` |
 | Wallpaper gallery | `lumen/wallpapers.py`, `wallpaper_ui.py`, `wallpapers/` |
+| Local MCP and agent operations | `lumen/mcp_server.py`, `agent.py`, `scripts/setup-mcp.py`; see [MCP](MCP.md) |
 | Launch, installation, and live checks | `scripts/` |
 | Unit and integration tests | `tests/` |
 
@@ -57,6 +58,7 @@ Inspect a script before running it. Run desktop checks only inside the target Hy
 | `scripts/verify_layers.py` | Generates footage and exercises layer controls, preview, sidecars, and export; screenshots only its own window |
 | `scripts/verify_click_zoom.py` | Uses synthetic footage to check click-driven zoom, saved controls, preview, and export |
 | `scripts/verify_wallpapers.py` | Uses synthetic footage and an image fixture to check gallery selection/import, persistence, preview, and export |
+| `scripts/verify_mcp.py` | Uses the official MCP client, synthetic media, and an owned test window to check recording/replay, editing, export, cancellation, and reconnecting |
 
 The scripts keep test artifacts in private temporary directories. `verify_layers.py` accepts `--speech-fixture /path/to/test-speech.wav` for an explicitly chosen local speech fixture; it does not download one automatically. Wallpaper import verification supplies its fixture to the chooser callback, so the real system file-dialog interaction still needs manual QA.
 

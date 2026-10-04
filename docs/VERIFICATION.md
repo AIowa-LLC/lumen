@@ -42,3 +42,22 @@ The click-zoom check compared frames from a static synthetic scene, scaled to 24
 - A matched Recordly comparison using the same scene, dimensions, encoder, frame rate, duration, and audio sources.
 
 The [manual QA checklist](QA.md) covers these follow-up scenarios. Unit tests can run with `/usr/bin/python -m unittest discover -s tests -v`. `verify_hud.py`, `verify_ui.py`, and `verify_workflow.py` intentionally record desktop content inside the target Wayland session; the HUD and UI checks restrict capture to their own application windows. `verify_layers.py` and `verify_click_zoom.py` instead generate synthetic footage and take only their own window screenshots. The layer check can also use an explicitly supplied local/public speech fixture.
+
+## MCP integration — 2026-10-04
+
+Lumen 0.6.0 was checked with the official Python MCP SDK 2.3.0 in the Omarchy
+Hyprland session. Five protocol tests passed for discovery, current/legacy
+connections, strict recipe/capture schemas, structured outputs, resources, prompt
+content, and actionable native errors. The desktop proof used
+`scripts/verify_mcp.py`, synthetic footage, and only its owned floating test window
+with audio, webcam, click hooks, and cursor telemetry disabled.
+
+The stdio client discovered all 20 tools, started capture, paused/resumed, finalized
+a take, started/saved/stopped replay, imported footage and a custom wallpaper,
+changed trim/speed, added captions and an annotation, received a frame image, and
+rendered a preview and MP4. Render cancellation completed without publishing a
+partial output. A legacy client reconnected to retrieve and finish an existing
+job. The imported source's SHA-256 remained unchanged. The final 960px export's
+duration matched a 0.2–2.8-second trim at 1.5× speed. Artifacts are in
+`/tmp/lumen-mcp-verify-lg4cf1j6`. This verifies short synthetic workflows rather
+than sustained capture or physical input hardware.

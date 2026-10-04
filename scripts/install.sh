@@ -30,6 +30,18 @@ if (source / ".speech/runtime.json").is_file():
                     ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
     (app / "scripts").mkdir(exist_ok=True)
     shutil.copy2(source / "scripts/setup-speech.py", app / "scripts/setup-speech.py")
+if (source / ".mcp/runtime.json").is_file():
+    import json
+
+    shutil.copytree(source / ".mcp", app / ".mcp", dirs_exist_ok=True,
+                    ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+    runtime_path = app / ".mcp/runtime.json"
+    runtime = json.loads(runtime_path.read_text())
+    runtime["python"] = str(app / ".mcp/venv/bin/python")
+    runtime_path.write_text(json.dumps(runtime, indent=2) + "\n")
+    runtime_path.chmod(0o600)
+(app / "scripts").mkdir(exist_ok=True)
+shutil.copy2(source / "scripts/setup-mcp.py", app / "scripts/setup-mcp.py")
 launcher = bin_home / "lumen"
 launcher.write_text(
     "#!/usr/bin/env bash\nset -euo pipefail\n"

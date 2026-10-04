@@ -8,6 +8,7 @@ from copy import deepcopy
 from datetime import datetime
 import json
 import math
+import os
 from pathlib import Path
 import shutil
 import signal
@@ -157,12 +158,13 @@ def clock_text(seconds):
 class LumenApplication(Adw.Application):
     def __init__(self):
         super().__init__(
-            application_id="io.github.lumen.Recorder",
+            application_id=os.environ.get("LUMEN_APPLICATION_ID", "io.github.lumen.Recorder"),
             flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE,
         )
         self.window = None
         self.hud = None
         self.view = "hud"
+        self.agent = None
 
     def do_startup(self):
         Adw.Application.do_startup(self)
@@ -279,6 +281,21 @@ class LumenApplication(Adw.Application):
 
     def do_command_line(self, command):
         args = command.get_arguments()[1:]
+        if args and args[0] == "--agent":
+            try:
+                if len(args) != 2:
+                    raise ValueError("--agent requires one JSON request.")
+                self.ensure_windows()
+                if self.agent is None:
+                    from .agent import AgentController
+
+                    self.agent = AgentController(self.window)
+                result = self.agent.request(args[1])
+                command.print_literal(json.dumps({"result": result}, allow_nan=False) + "\n")
+                return 0
+            except Exception as exc:
+                command.print_literal(json.dumps({"error": str(exc)}) + "\n")
+                return 1
         if self.window is None and any(
             a in args for a in ("--stop", "--pause", "--save-replay")
         ):
@@ -356,6 +373,7 @@ class StudioWindow(Adw.ApplicationWindow):
         self.recovery_path = None
         self.restored_recovery = None
         self.open_generation = 0
+        self.opening_project = None
         self.toast_overlay = Adw.ToastOverlay()
         self.set_content(self.toast_overlay)
         layout = box(True, 0)
@@ -1733,6 +1751,7 @@ class StudioWindow(Adw.ApplicationWindow):
         project = deepcopy(project)
         self.open_generation += 1
         generation = self.open_generation
+        self.opening_project = project["path"]
         source = Path(project["path"]) / project.get("source", "source.mkv")
 
         def work():
@@ -1745,6 +1764,8 @@ class StudioWindow(Adw.ApplicationWindow):
             return meta
 
         def done(meta):
+            if generation == self.open_generation:
+                self.opening_project = None
             if (
                 generation != self.open_generation
                 or self.export_busy
@@ -1802,7 +1823,12 @@ class StudioWindow(Adw.ApplicationWindow):
             )
             self.show_page("editor")
 
-        self.worker(work, done)
+        def failed(exc):
+            if generation == self.open_generation:
+                self.opening_project = None
+            self.error(exc)
+
+        self.worker(work, done, failed)
 
     def media_error(self, stream, *_):
         if stream.get_error():
@@ -2178,7 +2204,7 @@ class StudioWindow(Adw.ApplicationWindow):
 
         chooser.save(self, None, chosen)
 
-    def render_export(self, options, destination, project=None, preview=False):
+    def render_export(self, options, destination, project=None, preview=False, completed=None):
         if self.export_busy:
             self.toast("An export is already running.")
             return
@@ -2196,7 +2222,7 @@ class StudioWindow(Adw.ApplicationWindow):
         def progress(fraction):
             GLib.idle_add(self.set_progress, fraction)
 
-        def done(path):
+        def publish(path):
             self.finish_export()
             self.export_progress.set_fraction(1)
             if preview:
@@ -2233,6 +2259,16 @@ class StudioWindow(Adw.ApplicationWindow):
             toast.connect("button-clicked", lambda *_: self.open_path(path))
             self.toast_overlay.add_toast(toast)
 
+        def done(path):
+            try:
+                publish(path)
+            except Exception as exc:
+                if completed:
+                    completed(None, exc)
+                raise
+            if completed:
+                completed(path)
+
         def failed(exc):
             self.finish_export()
             self.export_progress.set_text(
@@ -2242,6 +2278,8 @@ class StudioWindow(Adw.ApplicationWindow):
             )
             if not isinstance(exc, ExportCancelled):
                 self.error(exc)
+            if completed:
+                completed(None, exc)
 
         self.worker(
             lambda: exporter.export(
