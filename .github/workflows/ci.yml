@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validation:
+    name: Validation
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - name: Install native test dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-venv python3-gi gir1.2-gtk-4.0 gir1.2-adw-1 ffmpeg fonts-dejavu-core
+          /usr/bin/python3 -m venv --system-site-packages .ci-venv
+          .ci-venv/bin/python -m pip install ruff==0.14.5
+      - name: Lint
+        run: .ci-venv/bin/ruff check lumen tests scripts
+      - name: Unit and FFmpeg integration tests
+        run: /usr/bin/python3 -m unittest discover -s tests -v
