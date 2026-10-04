@@ -26,8 +26,8 @@ jobs:
         run: |
           pacman -Syu --noconfirm --needed python python-gobject gtk4 libadwaita ffmpeg ttf-dejavu
           /usr/bin/python -m venv --system-site-packages .ci-venv
-          .ci-venv/bin/python -m pip install ruff==0.14.5
+          .ci-venv/bin/python -m pip install ruff==0.14.5 '.[mcp]'
       - name: Lint
         run: .ci-venv/bin/ruff check lumen tests scripts
-      - name: Unit and FFmpeg integration tests
-        run: /usr/bin/python -m unittest discover -s tests -v
+      - name: Unit, MCP protocol, and FFmpeg integration tests
+        run: .ci-venv/bin/python -m unittest discover -s tests -v
