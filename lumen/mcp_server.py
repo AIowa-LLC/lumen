@@ -183,7 +183,7 @@ def create_server(bridge=None):
         """Copy a local video into a new take. Returns an import job; its result contains the new project ID."""
         return await call("import_video", source=source, name=name)
 
-    @mcp.tool(annotations=write, structured_output=True)
+    @mcp.tool(annotations=ToolAnnotations(read_only_hint=False, destructive_hint=True, open_world_hint=False), structured_output=True)
     async def lumen_update_edits(project_id: str, changes: EditPatch, name: str | None = None) -> dict[str, Any]:
         """Patch a saved recipe: trim, speed, frame, wallpaper, zoom, audio, or layer visibility. Unspecified fields persist."""
         return await call("update_edits", project_id=project_id, changes=changes.model_dump(exclude_unset=True), name=name)
@@ -208,7 +208,7 @@ def create_server(bridge=None):
         """Start a screen recording through the shared HUD controller. Audio defaults to none. Region/window modes require explicit geometry from sources. Returns a startup job; stop with lumen_stop_recording."""
         return await call("start_recording", options=options.model_dump() if options else {}, hide_controls=hide_controls)
 
-    @mcp.tool(annotations=write, structured_output=True)
+    @mcp.tool(annotations=ToolAnnotations(read_only_hint=False, destructive_hint=True, open_world_hint=False), structured_output=True)
     async def lumen_stop_recording() -> dict[str, Any]:
         """Stop and save the active recording, or stop/discard an unsaved replay buffer. Returns a finalization job."""
         return await call("stop_recording")
