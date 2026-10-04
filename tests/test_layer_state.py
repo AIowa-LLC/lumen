@@ -232,7 +232,7 @@ class LayerStateTests(unittest.TestCase):
             layers=Mock(transcribing=False),
         )
         pending = []
-        studio.worker.side_effect = lambda work, done: pending.append(done)
+        studio.worker.side_effect = lambda work, done, failed: pending.append(done)
         ui.StudioWindow.open_project(studio, {"path": "/tmp/different-layers"})
         studio.layers.transcribing = True
         # A successful stale probe must be ignored before it touches metadata.
@@ -290,7 +290,7 @@ class LayerStateTests(unittest.TestCase):
             layers=Mock(transcribing=False),
         )
         pending = []
-        studio.worker.side_effect = lambda work, done: pending.append(work)
+        studio.worker.side_effect = lambda work, done, failed: pending.append(work)
         ui.StudioWindow.open_project(studio, incoming)
         with (
             patch.object(ui, "probe", return_value={"duration": 3}),

@@ -64,7 +64,7 @@ class StudioStateTests(TestCase):
             layers=Mock(transcribing=False),
         )
         pending = []
-        studio.worker.side_effect = lambda work, done: pending.append(done)
+        studio.worker.side_effect = lambda work, done, failed: pending.append(done)
         ui.StudioWindow.open_project(studio, {"path": "/tmp/project-a"})
         ui.StudioWindow.open_project(studio, {"path": "/tmp/project-b"})
         pending[0]({})

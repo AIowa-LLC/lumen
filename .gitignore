@@ -7,3 +7,4 @@ dist/
 .venv/
 .speech/
 .ci-venv/
+.mcp/

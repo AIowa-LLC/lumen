@@ -78,3 +78,15 @@ Run in the target Omarchy / Hyprland session. Record the application revision, G
 ## Performance comparison
 
 Use the same monitor, scene, duration, codec, frame rate, audio sources, and encoder class for each recorder. Measure process CPU, GPU/video-engine activity, memory, output size, frame timing, and perceived audio/video sync over a representative take. Keep warm-up and export measurements separate. A successful short recording is a smoke test, not a performance benchmark.
+## MCP agent workflow
+
+- [ ] Set up the optional SDK and connect a stdio client inside the desktop session.
+- [ ] Discover sources, then record an explicitly selected test window with audio off.
+- [ ] Confirm the HUD shares recording state; pause/resume, stop, and poll finalization.
+- [ ] Import a fixture, open its take, and wait for opening to finish before editing.
+- [ ] Patch trim/speed/wallpaper, append captions/annotations, and inspect a frame image.
+- [ ] Render a preview, export, and confirm the source is unchanged and the saved recipe reopens.
+- [ ] Cancel a render and check that no partial export is published.
+- [ ] Disconnect/reconnect a client and retrieve an existing native job.
+- [ ] Check useful errors for unknown IDs, invalid recipes, external output paths, and a mismatched library.
+- [ ] Confirm starting a client alone does not start capture, and launch the HUD to stop agent capture manually.
