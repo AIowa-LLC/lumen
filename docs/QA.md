@@ -38,6 +38,10 @@ Run in the target Omarchy / Hyprland session. Record the application revision, G
 - [ ] Use **Preview edits** with trim, speed, timed zoom, framing, and audio changes. The rendered draft plays correctly at up to 960px / 30 fps. **Show original** restores the source; render again after changing the recipe.
 - [ ] Export an MP4 with a background, padding, volume change, and timed zoom. Verify duration, focus, easing, frame, audio selection, and synchronization in an external player.
 - [ ] Export a looping GIF. Verify animation and the absence of audio. Check the actual output dimensions; padding is included within the selected width.
+- [ ] In **Composition**, select each built-in wallpaper tile. Background switches to **Wallpaper** and the selected tile is highlighted. Render a preview and export MP4/GIF; the wallpaper fills the area behind the recording without stretching.
+- [ ] Use **Add your own wallpaper** with PNG, JPEG, and WebP, including wide and portrait images and filenames with spaces. Import several images, switch between their gallery tiles, save/reopen, delete the original images, and move the complete project folder. The copied images and chosen backdrop remain available.
+- [ ] Cancel the image chooser, select a damaged or oversized file, and switch projects while the chooser or import is pending. No unrelated project's wallpaper or edits should change. A missing saved wallpaper reports an actionable error; choose another image to recover.
+- [ ] Switch between wallpaper, gradients, **None**, and zero padding. **Show original** displays the chosen backdrop; a rendered preview already contains its backdrop and must not acquire a second frame. Caption, annotation, and click layers remain positioned correctly.
 - [ ] Cancel an export. The source remains playable and no completed destination is published. Retry successfully with a new filename.
 - [ ] Attempt export to an existing filename and to the original source. Both are rejected without modifying either file.
 - [ ] In a temporary library, add malformed project JSON. Valid recordings remain visible. Move a complete project folder and reopen it.

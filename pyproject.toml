@@ -24,7 +24,7 @@ lumen = "lumen.__main__:main"
 
 [tool.setuptools]
 packages = ["lumen"]
-include-package-data = true
+include-package-data = false
 
 [tool.setuptools.package-data]
-lumen = ["*.css"]
+lumen = ["*.css", "wallpapers/*.jpg"]

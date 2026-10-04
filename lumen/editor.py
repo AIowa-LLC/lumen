@@ -26,6 +26,7 @@ from .click_zoom import (
     write_camera_script,
 )
 from .overlays import ass_filter, compile_overlays
+from .wallpapers import BACKGROUND_STYLES, DEFAULT_WALLPAPER, wallpaper_path
 
 
 class ExportError(RuntimeError):
@@ -43,6 +44,7 @@ class ExportOptions:
     speed: float = 1.0
     background: str = "midnight"
     padding: int = 64
+    wallpaper: str = DEFAULT_WALLPAPER
     output_width: int | None = 1920
     zoom: float = 1.0
     zoom_x: float = 0.5
@@ -180,7 +182,7 @@ def _validate(options: ExportOptions, media: dict) -> tuple[float, float, float]
     end = min(end, media["duration"])
     if not 0.25 <= speed <= 4:
         raise ValueError("Speed must be between 0.25× and 4×.")
-    if options.background not in BACKGROUNDS:
+    if options.background not in BACKGROUND_STYLES:
         raise ValueError("Unknown background style.")
     if options.audio_mode not in {"mix", "desktop", "mic", "none"}:
         raise ValueError("Unknown audio selection.")
@@ -289,6 +291,11 @@ def _command(
         raise ValueError("Frame padding leaves too little room for the recording.")
     content_height = _even(content_width * media["height"] / media["width"])
     output_height = content_height + padding * 2
+    backdrop = (
+        wallpaper_path(project, options.wallpaper)
+        if padding and options.background == "wallpaper"
+        else None
+    )
     scripts = compile_overlays(
         project,
         source_width=media["width"],
@@ -363,11 +370,22 @@ def _command(
     filters.append("setsar=1")
     graph = [f"[0:v:0]{','.join(filters)}[content]"]
     if padding:
-        c0, c1 = BACKGROUNDS[options.background]
+        if backdrop:
+            background_filter = (
+                f"[1:v:0]scale={output_width}:{output_height}:"
+                "force_original_aspect_ratio=increase:flags=lanczos,"
+                f"crop={output_width}:{output_height},setsar=1,"
+                "setpts=PTS-STARTPTS,format=yuv420p"
+            )
+        else:
+            c0, c1 = BACKGROUNDS[options.background]
+            background_filter = (
+                f"gradients=s={output_width}x{output_height}:r={fps}:c0={c0}:c1={c1}:"
+                f"x0=0:y0=0:x1={output_width}:y1={output_height}:speed=0:seed=0:d={_fmt(duration)}"
+            )
         shadow_offset = max(2, min(padding // 4, 12))
         graph.append(
-            f"gradients=s={output_width}x{output_height}:r={fps}:c0={c0}:c1={c1}:"
-            f"x0=0:y0=0:x1={output_width}:y1={output_height}:speed=0:seed=0:d={_fmt(duration)},"
+            background_filter + ","
             f"drawbox=x={padding + shadow_offset}:y={padding + shadow_offset}:"
             f"w={content_width}:h={content_height}:c=black@0.22:t=fill[background]"
         )
@@ -436,11 +454,10 @@ def _command(
         _fmt(end - start),
         "-i",
         str(source),
-        "-filter_complex",
-        ";".join(graph),
-        "-map",
-        "[vout]",
     ]
+    if backdrop:
+        command += ["-loop", "1", "-framerate", str(fps), "-i", str(backdrop)]
+    command += ["-filter_complex", ";".join(graph), "-map", "[vout]"]
     if audio:
         command += ["-map", "[aout]", "-c:a", "aac", "-b:a", "192k"]
     else:

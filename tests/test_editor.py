@@ -21,6 +21,7 @@ from lumen.editor import (
     suggest_zoom,
     thumbnail,
 )
+from lumen.wallpapers import BUILTIN_WALLPAPERS, import_wallpaper
 
 
 @unittest.skipUnless(
@@ -225,6 +226,70 @@ class EditorIntegrationTests(unittest.TestCase):
             "silent.mp4", audio_mode="none", trim_end=1, background="none"
         )
         self.assertEqual(probe(silent)["audio_streams"], [])
+
+    def test_bundled_wallpapers_render_in_mp4_and_gif(self):
+        for name in BUILTIN_WALLPAPERS:
+            path = self.render(
+                name + ".mp4", background="wallpaper", wallpaper="builtin:" + name,
+                trim_start=1, trim_end=3, speed=2,
+            )
+            media = probe(path)
+            self.assertEqual((media["width"], media["height"]), (320, 194))
+            self.assertAlmostEqual(media["duration"], 1, delta=.1)
+            self.assertEqual(len(media["audio_streams"]), 1)
+            self.assertEqual(len(self.pixels(path)), 320 * 194 * 3)
+        gif = self.render(
+            "wallpaper.gif", format="gif", background="wallpaper",
+            wallpaper="builtin:aurora", trim_end=.5, fps=10,
+        )
+        self.assertEqual(probe(gif)["audio_streams"], [])
+        self.assertEqual(len(self.pixels(gif)), 320 * 194 * 3)
+
+    def test_custom_wallpapers_center_crop_landscape_and_portrait(self):
+        for width, height in ((600, 100), (100, 600)):
+            # Wide/portrait images with red/blue edges and a green center.
+            # Cover-cropping shows green at every corner; stretching shows red.
+            ppm = self.output_dir / "stripes.ppm"
+            data = bytearray()
+            for y in range(height):
+                for x in range(width):
+                    fraction = x / width if width > height else y / height
+                    data.extend((240, 20, 20) if fraction < 1/3 else (20, 210, 60) if fraction < 2/3 else (20, 20, 240))
+            ppm.write_bytes(f"P6\n{width} {height}\n255\n".encode() + data)
+            image = self.output_dir / f"portrait {height} ' [image].png"
+            subprocess.run(["ffmpeg", "-v", "error", "-i", str(ppm), str(image)], check=True, capture_output=True)
+            item = import_wallpaper(self.project, image)
+            image.unlink()
+            output = self.render(
+                f"crop-{height}.mp4", background="wallpaper", wallpaper=item["path"],
+                trim_end=.4, audio_mode="none",
+            )
+            pixels = self.pixels(output)
+            for index in (0, 319, 320 * 193, 320 * 194 - 1):
+                red, green, blue = pixels[index*3:index*3+3]
+                self.assertGreater(green, 180)
+                self.assertLess(red, 45)
+                self.assertLess(blue, 85)
+
+    def test_missing_wallpaper_cannot_publish_export(self):
+        destination = self.output_dir / "missing.mp4"
+        with self.assertRaisesRegex(ValueError, "missing"):
+            Exporter().export(
+                self.project,
+                ExportOptions(background="wallpaper", wallpaper="wallpapers/missing.jpg"),
+                destination,
+            )
+        self.assertFalse(destination.exists())
+
+    def test_no_frame_or_zero_padding_does_not_require_wallpaper(self):
+        for background, padding in (("none", 64), ("wallpaper", 0)):
+            destination = self.output_dir / (background + ".mp4")
+            Exporter().export(
+                self.project,
+                ExportOptions(background=background, padding=padding, wallpaper="wallpapers/missing.jpg", output_width=320, trim_end=.4),
+                destination,
+            )
+            self.assertEqual((probe(destination)["width"], probe(destination)["height"]), (320, 180))
 
     def test_timed_zoom_changes_only_focus_interval(self):
         baseline = self.render(

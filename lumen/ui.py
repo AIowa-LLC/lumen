@@ -46,6 +46,8 @@ from .layer_ui import (  # noqa: E402
     LayerPanel, LayerTimeline, clean_layers, draft_matches_project, draw_guides,
 )
 from .overlays import validate_project_overlays  # noqa: E402
+from .wallpaper_ui import WallpaperPanel  # noqa: E402
+from .wallpapers import BACKGROUND_STYLES  # noqa: E402
 from .system import (
     diagnostics,
     get_audio_sources,
@@ -862,8 +864,10 @@ class StudioWindow(Adw.ApplicationWindow):
         right.append(Gtk.Separator())
         right.append(label("COMPOSITION", "eyebrow"))
         self.background = field(
-            right, "Background", dropdown(["Midnight", "Violet", "Sand", "None"])
+            right, "Background", dropdown(["Midnight", "Violet", "Sand", "None", "Wallpaper"])
         )
+        self.wallpapers = WallpaperPanel(self)
+        right.append(self.wallpapers)
         self.background.connect("notify::selected", self.update_frame)
         self.padding = field(right, "Frame padding · pixels", spin(0, 300, 8, 64))
         right.append(Gtk.Separator())
@@ -933,6 +937,7 @@ class StudioWindow(Adw.ApplicationWindow):
         )
         self.click_zoom.connect("toggled", self.update_zoom_controls)
         self.update_zoom_controls()
+        self.wallpapers.load({})
         right.append(Gtk.Separator())
         right.append(label("EXPORT", "eyebrow"))
         self.export_format = field(
@@ -1853,11 +1858,12 @@ class StudioWindow(Adw.ApplicationWindow):
             self.zoom.get_value() > 1 and not self.click_zoom.get_active()
         )
         self.update_zoom_controls()
+        self.wallpapers.load(edits)
         for widget, values, value in [
             (self.speed, [0.5, 0.75, 1, 1.5, 2, 3], edits.get("speed", 1)),
             (
                 self.background,
-                ["midnight", "violet", "sand", "none"],
+                BACKGROUND_STYLES,
                 edits.get("background", "midnight"),
             ),
             (
@@ -1873,15 +1879,17 @@ class StudioWindow(Adw.ApplicationWindow):
             (self.export_format, ["mp4", "gif"], edits.get("format", "mp4")),
         ]:
             widget.set_selected(values.index(value) if value in values else 0)
+        self.update_frame()
 
     def edit_options(self):
         return ExportOptions(
             trim_start=self.trim_start.get_value(),
             trim_end=self.trim_end.get_value(),
             speed=[0.5, 0.75, 1, 1.5, 2, 3][self.speed.get_selected()],
-            background=["midnight", "violet", "sand", "none"][
+            background=BACKGROUND_STYLES[
                 self.background.get_selected()
             ],
+            wallpaper=self.wallpapers.selected,
             padding=self.padding.get_value_as_int(),
             output_width=[1920, 1280, 960, None][self.export_size.get_selected()],
             zoom=self.zoom.get_value(),
@@ -2046,10 +2054,11 @@ class StudioWindow(Adw.ApplicationWindow):
         selected = self.background.get_selected()
         if self.preview_options:
             self.frame.add_css_class("preview-none")
-        elif selected:
+        elif selected in (1, 2, 3):
             self.frame.add_css_class(
                 ["", "preview-violet", "preview-sand", "preview-none"][selected]
             )
+        self.wallpapers.update_frame()
 
     def show_original(self, source_time=None):
         if not self.project:
