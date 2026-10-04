@@ -11,7 +11,8 @@ The repository currently has one maintainer, so pull requests do not require a
 second person's approval. This allows the maintainer to merge their own work once
 checks pass. Add an approval requirement when additional reviewers are available.
 
-CI runs lint and the unit/FFmpeg integration suite on Ubuntu with GTK bindings.
+CI runs lint and the unit/FFmpeg integration suite in a pinned Arch container with
+GTK bindings, matching the supported Omarchy multimedia stack.
 It uses a read-only workflow token and a pinned checkout action with credentials
 removed. It does not capture the desktop or run opt-in live verification scripts.
 Omarchy capture and native playback still need the documented local checks.
