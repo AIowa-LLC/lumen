@@ -1,6 +1,6 @@
 # Using Lumen
 
-[Back to the README](../README.md) · [Captions & layers](CAPTIONS.md) · [Manual QA](QA.md)
+[Back to the README](../README.md) · [Captions & layers](CAPTIONS.md) · [MCP guide](MCP.md) · [Manual QA](QA.md)
 
 ## HUD and Studio
 
@@ -54,6 +54,20 @@ For global controls while Lumen is hidden, install the application first, then p
 The helper targets `${XDG_CONFIG_HOME:-$HOME/.config}/hypr/bindings.lua` and checks that `hyprland.lua` loads `hypr.bindings`. It adds **Super+Alt+R** (record), **Super+Alt+Shift+R** (stop), **Super+Alt+P** (pause/resume), and **Super+Alt+V** (save replay). **Super+Alt+S** remains Omarchy's scratchpad shortcut.
 
 It previews by default, refuses conflicts, backs up the bindings before applying, reloads Hyprland, and validates the result. If validation fails, it restores its own changes unless another edit arrived in the meantime; in that case it leaves the file untouched and reports the backup. It will not rewrite an unfamiliar configuration. Existing Hyprland bindings can also call the same CLI flags directly.
+
+## Agent control with MCP
+
+A client with stdio MCP support can operate Lumen through the same native app.
+See the [MCP guide](MCP.md) for installation, client configuration, a complete
+record-to-export example, and troubleshooting. Repository contributors should
+also read the [coding agent guide](../AGENTS.md).
+
+MCP recording defaults to no audio and hides controls during capture. Choose the
+source and inputs explicitly, inspect shared app status before changing an active
+session, and poll returned jobs until they finish. Closing the MCP client does
+not stop a recording. Reopen Lumen to show its controls when needed. To keep replay
+footage, save it and wait for success before stopping the buffer; stopping discards
+unsaved replay history.
 
 ## Capture settings
 
