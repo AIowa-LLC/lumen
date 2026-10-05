@@ -26,7 +26,7 @@ Lumen is an **Omarchy-exclusive project**. Its capture discovery, floating contr
 - **Record from a compact HUD.** Choose a source, start a countdown, pause/resume, and stop to open the saved take in Studio. Switch between HUD and Studio without interrupting capture.
 - **Control your inputs.** Select desktop audio, a microphone, or both; use live microphone and webcam toggles with the native backend. Desktop and microphone audio are stored in separate tracks.
 - **Save the last moment.** Start a 15-, 30-, or 60-second replay buffer and save clips while it keeps running.
-- **Give a recording a finished frame.** Trim, change playback speed, add padding, and choose gradients, the Aurora/Dusk/Glacier wallpapers, or a custom image.
+- **Give a recording a finished frame.** Trim, change playback speed, add padding, and choose gradients, ten built-in wallpapers, or a custom image.
 - **Focus on the action.** Use fixed or animated zoom, cursor-based suggestions, or click-driven zoom with adjustable hold and transition timing.
 - **Add context.** Author captions, text labels, arrows, boxes, highlights, and click rings. Import/export SRT or WebVTT, or generate captions with an optional local speech runtime.
 - **Export locally.** Render an edited preview, export H.264 MP4 or looping GIF, and preserve the original recording alongside the saved edit recipe.
