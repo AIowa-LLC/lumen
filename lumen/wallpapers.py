@@ -9,7 +9,18 @@ import subprocess
 import tempfile
 
 
-BUILTIN_WALLPAPERS = {"aurora": "Aurora", "dusk": "Dusk", "glacier": "Glacier"}
+BUILTIN_WALLPAPERS = {
+    "aurora": "Aurora",
+    "dusk": "Dusk",
+    "glacier": "Glacier",
+    "sirocco": "Sirocco",
+    "canopy": "Canopy",
+    "contour": "Contour",
+    "sanctuary": "Sanctuary",
+    "vesper": "Vesper",
+    "washi": "Washi",
+    "cosmos": "Cosmos",
+}
 DEFAULT_WALLPAPER = "builtin:aurora"
 BACKGROUND_STYLES = ["midnight", "violet", "sand", "none", "wallpaper"]
 MAX_IMAGE_BYTES = 50 * 1024 * 1024
