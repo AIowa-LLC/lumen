@@ -15,7 +15,7 @@ Lumen is a native screen recorder and presentation editor for **Omarchy's Hyprla
 
 The interface uses **GTK 4 and libadwaita**, capture uses **GPU Screen Recorder**, and preview/export uses **FFmpeg**. Recordings, edit recipes, and optional speech transcription stay on your computer. No cloud account is required.
 
-[Get started](#get-started) · [User guide](docs/USAGE.md) · [Captions & layers](docs/CAPTIONS.md) · [Contribute](docs/DEVELOPMENT.md) · [Support](#support-the-work)
+[Get started](#get-started) · [User guide](docs/USAGE.md) · [MCP guide](docs/MCP.md) · [Captions & layers](docs/CAPTIONS.md) · [Contribute](docs/DEVELOPMENT.md) · [Support](#support-the-work)
 
 ## Built for Omarchy
 
@@ -127,6 +127,8 @@ Real microphone/webcam behavior, long sessions, additional GPU/codec combination
 ## Documentation
 
 - [User guide](docs/USAGE.md): controls, capture settings, replay, editing, audio, and recovery
+- [Agent control with MCP](docs/MCP.md): setup, tool calls, job polling, shared-session safety, and troubleshooting
+- [Coding agent guide](AGENTS.md): repository map, verification commands, and contribution safeguards
 - [Captions and timed layers](docs/CAPTIONS.md): authoring, click-driven zoom, and local speech setup
 - [Development and contributing](docs/DEVELOPMENT.md): source layout, tests, and safe live verification
 - [Verification record](docs/VERIFICATION.md): recorded test results and their limits
