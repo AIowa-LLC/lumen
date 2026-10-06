@@ -15,7 +15,7 @@ Lumen is a native screen recorder and presentation editor for **Omarchy's Hyprla
 
 The interface uses **GTK 4 and libadwaita**, capture uses **GPU Screen Recorder**, and preview/export uses **FFmpeg**. Recordings, edit recipes, and optional speech transcription stay on your computer. No cloud account is required.
 
-[Get started](#get-started) · [User guide](docs/USAGE.md) · [Captions & layers](docs/CAPTIONS.md) · [Contribute](docs/DEVELOPMENT.md) · [Support](#support-the-work)
+[Get started](#get-started) · [User guide](docs/USAGE.md) · [MCP guide](docs/MCP.md) · [Captions & layers](docs/CAPTIONS.md) · [Contribute](docs/DEVELOPMENT.md) · [Support](#support-the-work)
 
 ## Built for Omarchy
 
@@ -26,7 +26,7 @@ Lumen is an **Omarchy-exclusive project**. Its capture discovery, floating contr
 - **Record from a compact HUD.** Choose a source, start a countdown, pause/resume, and stop to open the saved take in Studio. Switch between HUD and Studio without interrupting capture.
 - **Control your inputs.** Select desktop audio, a microphone, or both; use live microphone and webcam toggles with the native backend. Desktop and microphone audio are stored in separate tracks.
 - **Save the last moment.** Start a 15-, 30-, or 60-second replay buffer and save clips while it keeps running.
-- **Give a recording a finished frame.** Trim, change playback speed, add padding, and choose gradients, the Aurora/Dusk/Glacier wallpapers, or a custom image.
+- **Give a recording a finished frame.** Trim, change playback speed, add padding, and choose gradients, ten built-in wallpapers, or a custom image.
 - **Focus on the action.** Use fixed or animated zoom, cursor-based suggestions, or click-driven zoom with adjustable hold and transition timing.
 - **Add context.** Author captions, text labels, arrows, boxes, highlights, and click rings. Import/export SRT or WebVTT, or generate captions with an optional local speech runtime.
 - **Export locally.** Render an edited preview, export H.264 MP4 or looping GIF, and preserve the original recording alongside the saved edit recipe.
@@ -127,6 +127,8 @@ Real microphone/webcam behavior, long sessions, additional GPU/codec combination
 ## Documentation
 
 - [User guide](docs/USAGE.md): controls, capture settings, replay, editing, audio, and recovery
+- [Agent control with MCP](docs/MCP.md): setup, tool calls, job polling, shared-session safety, and troubleshooting
+- [Coding agent guide](AGENTS.md): repository map, verification commands, and contribution safeguards
 - [Captions and timed layers](docs/CAPTIONS.md): authoring, click-driven zoom, and local speech setup
 - [Development and contributing](docs/DEVELOPMENT.md): source layout, tests, and safe live verification
 - [Verification record](docs/VERIFICATION.md): recorded test results and their limits
